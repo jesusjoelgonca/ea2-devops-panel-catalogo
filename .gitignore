@@ -1,0 +1,22 @@
+# Entornos y caché
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+
+# Construcciones
+/build/
+/dist/
+
+# Salida del generador del panel: se construye en el despliegue
+/site/
+
+# Material de trabajo local: no forma parte de la entrega
+_local/
+docs/build/
+
+# Sistema
+Thumbs.db
+.DS_Store
