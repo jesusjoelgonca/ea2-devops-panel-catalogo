@@ -1,5 +1,7 @@
 # EA2 — Panel del catálogo con integración y despliegue continuos
 
+[![CI](https://github.com/jesusjoelgonca/ea2-devops-panel-catalogo/actions/workflows/ci.yml/badge.svg)](https://github.com/jesusjoelgonca/ea2-devops-panel-catalogo/actions/workflows/ci.yml)
+
 Continuación de la Evidencia de aprendizaje 1 del curso **Programación para
 Análisis de Datos** (PREICA2602B020048). El catálogo de teléfonos inteligentes
 construido con *web scraping* en la EA1 se convierte aquí en un panel web que
@@ -10,6 +12,7 @@ y GitHub Pages.
 - **Datos de entrada:** `data/catalogo_consolidado.csv` — 16 productos extraídos
   de Amazon.com en la EA1 (método BeautifulSoup, artículo principal:
   Samsung Galaxy A57 5G, ASIN `B0GW9TVHJB`)
+- **Sitio publicado:** <https://jesusjoelgonca.github.io/ea2-devops-panel-catalogo/>
 - **Entregable:** informe en PDF (`docs/Gonzalez_Jesus_Optimizando_EA2.pdf`)
 
 ## Qué hace el proyecto
@@ -51,6 +54,33 @@ EA2/
 ├── .github/workflows/ # integración continua y despliegue
 └── docs/              # informe de la evidencia
 ```
+
+## Flujo de trabajo
+
+El desarrollo siguió un esquema de ramas por funcionalidad con revisión antes
+de fusionar:
+
+1. `main` parte del esqueleto del proyecto y del catálogo de datos.
+2. Cada funcionalidad se desarrolla en una rama `feature/...` y entra a
+   `main` por medio de un *pull request*, que GitHub Actions verifica antes
+   de la fusión.
+3. Al fusionarse en `main`, el flujo de despliegue reconstruye el panel y lo
+   publica en GitHub Pages.
+
+### Integración continua (`.github/workflows/ci.yml`)
+
+Se ejecuta en cada *push* y en cada *pull request*, sobre **Ubuntu y Windows**
+con Python 3.12. Comprueba que todos los módulos compilan (`compileall`) y
+ejecuta la suite de pruebas. La matriz de sistemas operativos es la prueba de
+la portabilidad: el proyecto no usa rutas absolutas ni APIs de un solo sistema.
+
+### Despliegue continuo (`.github/workflows/cd.yml`)
+
+Al actualizarse `main`, un segundo flujo vuelve a correr las pruebas, genera
+el panel, empaqueta la carpeta `site/` y la publica en **GitHub Pages** con
+`actions/deploy-pages`. La publicación se hace desde el servidor de Actions,
+nunca desde el equipo local: el sitio publicado sale siempre del código de la
+rama principal, no de una carpeta local.
 
 ## Estado
 
