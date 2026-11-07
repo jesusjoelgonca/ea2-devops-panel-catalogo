@@ -1,0 +1,55 @@
+name: CD
+
+# Despliegue continuo: cuando main se actualiza, se reconstruye el panel y se
+# publica en GitHub Pages. La construcción se hace en el servidor de Actions,
+# así que el sitio publicado siempre sale del código de la rama principal.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Un despliegue a la vez: si llegan dos pushes seguidos, el primero se cancela.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  construir:
+    name: Construir el panel
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Verificar las pruebas antes de publicar
+        run: python -m unittest discover -s tests
+
+      - name: Generar el panel
+        run: python -m src.panel construir --salida site
+
+      - name: Listar los archivos generados
+        run: ls -la site/
+
+      - name: Empaquetar el sitio
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  publicar:
+    name: Publicar en GitHub Pages
+    needs: construir
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
+      - id: despliegue
+        uses: actions/deploy-pages@v4
