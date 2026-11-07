@@ -10,12 +10,14 @@ venv/
 /build/
 /dist/
 
+# Documentos del informe: se entregan por la plataforma, no por el repositorio
+docs/
+
 # Salida del generador del panel: se construye en el despliegue
 /site/
 
 # Material de trabajo local: no forma parte de la entrega
 _local/
-docs/build/
 
 # Sistema
 Thumbs.db
