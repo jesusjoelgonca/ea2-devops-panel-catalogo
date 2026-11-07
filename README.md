@@ -29,7 +29,7 @@ pipeline no depende de descargas de paquetes.
 
 ```bash
 # Construir el panel a partir del catálogo
-python -m panel construir --catalogo data/catalogo_consolidado.csv --salida site
+python -m src.panel construir --catalogo data/catalogo_consolidado.csv --salida site
 
 # Pruebas unitarias
 python -m unittest discover -s tests -v
