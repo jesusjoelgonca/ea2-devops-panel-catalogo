@@ -1,0 +1,29 @@
+name: CI
+
+# Integración continua: compila los módulos y ejecuta la suite de pruebas en
+# cada pull request y en cada actualización de main.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  pruebas:
+    name: Pruebas (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Compilar todos los módulos
+        run: python -m compileall src tests
+
+      - name: Ejecutar las pruebas unitarias
+        run: python -m unittest discover -s tests -v
